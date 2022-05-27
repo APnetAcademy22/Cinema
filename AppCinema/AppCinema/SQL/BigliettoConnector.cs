@@ -60,5 +60,16 @@ namespace AppCinema.SQL
             return command.ExecuteNonQuery();
         }
 
+        public decimal GetIncassoSala(int idSala)
+        {
+            string sql = @"select sum(prezzo) as Incasso from Biglietto where valido = 1 AND IdSala = @IdSala ;";
+            using var connection = new SqlConnection(_connectionString);
+            connection.Open();
+            using var command = new SqlCommand(sql, connection);
+            command.Parameters.AddWithValue("@IdSala", idSala);
+
+            using var reader = command.ExecuteReader();
+            return decimal.Parse(reader["Incasso"].ToString());
+        }
     }
 }

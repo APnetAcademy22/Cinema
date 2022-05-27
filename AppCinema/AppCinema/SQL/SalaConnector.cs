@@ -27,7 +27,6 @@ namespace AppCinema.SQL
                     IdSala = int.Parse(reader["IdSala"].ToString()),
                     Capienza = int.Parse(reader["Capienza"].ToString()),
                     PostiOccupati = int.Parse(reader["PostiOccupati"].ToString()),
-                    Cinema = reader["Cinema"].ToString(),
                     IdFilm = int.Parse(reader["IdFilm"].ToString()),
                 };
             }

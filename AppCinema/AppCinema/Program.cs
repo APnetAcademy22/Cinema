@@ -8,6 +8,7 @@ builder.Services.AddSingleton(x => new SpettatoreConnector(builder.Configuration
 builder.Services.AddSingleton(x => new SalaConnector(builder.Configuration.GetConnectionString("ConnectionString")));
 builder.Services.AddSingleton(x => new FilmConnector(builder.Configuration.GetConnectionString("ConnectionString")));
 builder.Services.AddSingleton(x => new BigliettoConnector(builder.Configuration.GetConnectionString("ConnectionString")));
+builder.Services.AddSingleton(x => new IncassoConnector(builder.Configuration.GetConnectionString("ConnectionString")));
 
 var app = builder.Build();
 
