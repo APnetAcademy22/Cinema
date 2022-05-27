@@ -1,16 +1,35 @@
 ﻿using AppCinema.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using AppCinema.Models;
+using AppCinema.SQL;
+using AppCinema.Exceptions;
+using AppCinema.SupportFunctions;
 
 namespace AppCinema.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly FilmConnector _filmConnector;
+        private readonly IncassoConnector _incassoConnector;
+        private readonly BigliettoConnector _bigliettoConnector;
+        private readonly SalaConnector _salaConnector;
+        private readonly SpettatoreConnector _spettatoreConnector;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger,
+                                FilmConnector filmConnector,
+                                IncassoConnector incassoConnector,
+                                BigliettoConnector biglietto,
+                                SalaConnector salaConnector,
+                                SpettatoreConnector spettatoreConnector)
         {
             _logger = logger;
+            _filmConnector = filmConnector;
+            _incassoConnector = incassoConnector;
+            _bigliettoConnector = biglietto;
+            _spettatoreConnector = spettatoreConnector;
+            _salaConnector = salaConnector;
         }
 
         [HttpGet]
@@ -23,6 +42,36 @@ namespace AppCinema.Controllers
         public IActionResult AggiungiSpettatore()
         {
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult SalaPiena()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AggiungiSpettatore(IngressoViewModel ingresso)
+        {
+            int posto;
+            try 
+            {
+                posto = _salaConnector.AddSpettatore(ingresso.SalaSelezionata.IdSala);
+            }
+            catch (SalaAlCompletoException)
+            {
+                return View(SalaPiena);
+            }
+            BigliettoModel biglietto = new BigliettoModel()
+            {
+                IdSala = ingresso.SalaSelezionata.IdSala,
+                Posto = posto,
+                Prezzo = PriceHelper.ComputePrice(ingresso.Spettatore),
+                Valido = true
+            };
+            ingresso.Spettatore.IdBiglietto = _bigliettoConnector.AddBiglietto(biglietto);
+            _spettatoreConnector.AddSpettatore(ingresso.Spettatore);
+            return RedirectToAction("Index");
         }
 
         [HttpGet]

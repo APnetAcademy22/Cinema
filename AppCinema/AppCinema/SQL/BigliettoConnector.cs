@@ -36,17 +36,17 @@ namespace AppCinema.SQL
         public int AddBiglietto(BigliettoModel biglietto)
         {
             string sql = @"insert into Biglietto
-                            values (@IdBiglietto, @Posto, @IdSala, @Prezzo, @Valido)";
+                            OUTPUT inserted.IdBiglietto
+                            values (@Posto, @IdSala, @Prezzo, @Valido)";
             using var connection = new SqlConnection(_connectionString);
             connection.Open();
             using var command = new SqlCommand(sql, connection);
-            command.Parameters.AddWithValue("@IdBiglietto", biglietto.IdBiglietto);
             command.Parameters.AddWithValue("@Posto", biglietto.Posto);
             command.Parameters.AddWithValue("@IdSala", biglietto.IdSala);
             command.Parameters.AddWithValue("@Prezzo", biglietto.Prezzo);
             command.Parameters.AddWithValue("@Valido", biglietto.Valido?1:0 );
 
-            return command.ExecuteNonQuery();
+            return Convert.ToInt32(command.ExecuteScalar());
         }
 
         public int InvalidUsedBiglietti(int idSala)

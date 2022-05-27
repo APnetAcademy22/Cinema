@@ -13,7 +13,7 @@ namespace AppCinema.SQL
         }
         public SalaModel GetSalaById(int id)
         {
-            var query = "SELECT * FROM Sala WHERE Id = @id";
+            var query = "SELECT * FROM Sala WHERE IdSala = @id";
             using var connection = new SqlConnection(_connectionString);
             connection.Open();
             using var command = new SqlCommand(query, connection);
@@ -42,15 +42,16 @@ namespace AppCinema.SQL
             }
             else
             {
-                string sql = @"Update  Sala
-                                set PostiOccupati = PostiOccupati + 1
+                string sql = @"Update  Sala 
+                                set PostiOccupati = PostiOccupati + 1 
+                                OUTPUT inserted.PostiOccupati
                                 where IdSala = @IdSala";
                 using var connection = new SqlConnection(_connectionString);
                 connection.Open();
                 using var command = new SqlCommand(sql, connection);
                 command.Parameters.AddWithValue("@IdSala", idSala);
 
-                return command.ExecuteNonQuery();
+                return Convert.ToInt32(command.ExecuteScalar());
             }
         }
 
