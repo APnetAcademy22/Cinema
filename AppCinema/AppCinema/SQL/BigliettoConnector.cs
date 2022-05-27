@@ -67,9 +67,13 @@ namespace AppCinema.SQL
             connection.Open();
             using var command = new SqlCommand(sql, connection);
             command.Parameters.AddWithValue("@IdSala", idSala);
-
-            using var reader = command.ExecuteReader();
-            return decimal.Parse(reader["Incasso"].ToString());
+            
+            return Convert.ToDecimal(command.ExecuteScalar()); // si rompe quando il risultato è vuoto
+            
+            //tentativi
+            //using var reader = command.ExecuteReader();
+            //decimal result = decimal.Parse(reader["Incasso"].ToString());
+            //return result;
         }
     }
 }

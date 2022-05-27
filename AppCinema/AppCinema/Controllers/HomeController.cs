@@ -80,6 +80,16 @@ namespace AppCinema.Controllers
             return View();
         }
 
+        [HttpPost]
+        public IActionResult AggiungiIncasso(SalaModel Sala)
+        {
+            decimal incasso = _bigliettoConnector.GetIncassoSala(Sala.IdSala);
+            _bigliettoConnector.InvalidUsedBiglietti(Sala.IdSala);
+            _salaConnector.SvuotaSala(Sala.IdSala);
+            _incassoConnector.AddIncasso(Sala.IdSala, incasso);
+            return RedirectToAction("Index");
+        }
+
         [HttpGet]
         public IActionResult Statistiche()
         {
