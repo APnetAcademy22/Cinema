@@ -19,6 +19,24 @@ namespace AppCinema.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult AggiungiSpettatore()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult AggiungiIncasso()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Statistiche()
+        {
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
